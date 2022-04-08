@@ -1,9 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pavlok_ui_task/src/common/widgets/app_button.dart';
+import 'package:pavlok_ui_task/src/screens/sleep_onboarding.dart';
 import 'package:pavlok_ui_task/src/utils/assets.dart';
 import 'package:pavlok_ui_task/src/utils/colors.dart';
 import 'package:pavlok_ui_task/src/utils/spacers.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 class MainGoalScreen extends StatefulWidget {
   const MainGoalScreen({Key? key}) : super(key: key);
@@ -38,8 +41,14 @@ class _MainGoalScreenState extends State<MainGoalScreen> {
     "Spending on credit cards",
   ];
 
+  final List<String> _badHabitsIcons = [
+    Assets.sleepIcon,
+    Assets.walkIcon,
+    Assets.bottleIcon,
+    Assets.donateIcon,
+  ];
+
   int goodHabitsIndex = 0;
-  int badHabitsIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +59,7 @@ class _MainGoalScreenState extends State<MainGoalScreen> {
       child: Builder(
         builder: (BuildContext context) {
           return Scaffold(
+            backgroundColor: AppColors.appBackgroundColor,
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -123,7 +133,7 @@ class _MainGoalScreenState extends State<MainGoalScreen> {
                     ),
                   ),
                 ),
-                Spacers.verticalSpacer(height: 43),
+                Spacers.verticalSpacer(height: 40),
                 TabBar(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   labelStyle: theme.textTheme.bodyText2!.copyWith(
@@ -172,231 +182,177 @@ class _MainGoalScreenState extends State<MainGoalScreen> {
                   ],
                 ),
                 Expanded(
-                  child: Container(
-                    color: Colors.white24,
-                    child: TabBarView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24.w),
-                          child: ListView.separated(
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: _goodHabits.length,
-                            itemBuilder: (context, index) {
-                              bool selectedGoodHabit = index == goodHabitsIndex;
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    goodHabitsIndex = index;
-                                  });
-                                },
-                                child: Container(
-                                  width: 312.w,
-                                  height: 72.h,
-                                  decoration: selectedGoodHabit
-                                      ? BoxDecoration(
-                                          border: Border.all(
-                                            color: AppColors.primaryColor,
-                                          ),
+                  child: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24.w),
+                        child: ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _goodHabits.length,
+                          itemBuilder: (context, index) {
+                            bool selectedGoodHabit = index == goodHabitsIndex;
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  goodHabitsIndex = index;
+                                });
+                              },
+                              child: Container(
+                                width: 312.w,
+                                height: 72.h,
+                                decoration: selectedGoodHabit
+                                    ? BoxDecoration(
+                                        border: Border.all(
+                                          color: AppColors.primaryColor,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(16.r),
+                                        color: AppColors.listItemIconColor,
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            offset: Offset(0, 14),
+                                            blurRadius: 40.0,
+                                            color:
+                                                AppColors.listItemShadowColor,
+                                          )
+                                        ],
+                                      )
+                                    : BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(16.r),
+                                        color: Colors.white,
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            offset: Offset(0, 14),
+                                            blurRadius: 40.0,
+                                            color:
+                                                AppColors.listItemShadowColor,
+                                          )
+                                        ],
+                                      ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 56.w,
+                                        height: 56.h,
+                                        decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(16.r),
                                           color: AppColors.listItemIconColor,
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                offset: Offset(0, 8),
-                                                blurRadius: 10.0,
-                                                color:
-                                                    AppColors.listItemIconColor)
-                                          ],
-                                        )
-                                      : BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16.r),
-                                          color: Colors.white,
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                offset: Offset(0, 8),
-                                                blurRadius: 10.0,
-                                                color:
-                                                    AppColors.listItemIconColor)
-                                          ],
                                         ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 56.w,
-                                          height: 56.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(16.r),
-                                            color: AppColors.listItemIconColor,
-                                          ),
+                                        child: Image.asset(
+                                            _goodHabitsIcons[index]),
+                                      ),
+                                      Spacers.horizontalSpacer(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          _goodHabits[index],
+                                          style: selectedGoodHabit
+                                              ? theme.textTheme.bodyText1!
+                                                  .copyWith(
+                                                  color: AppColors.primaryColor,
+                                                  fontWeight: FontWeight.w600,
+                                                )
+                                              : theme.textTheme.bodyText1!
+                                                  .copyWith(
+                                                  color:
+                                                      AppColors.mainTextColor,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                         ),
-                                        Spacers.horizontalSpacer(width: 12),
-                                        Expanded(
-                                          child: Text(
-                                            _goodHabits[index],
-                                            style: selectedGoodHabit
-                                                ? theme.textTheme.bodyText1!
-                                                    .copyWith(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    fontWeight: FontWeight.w600,
-                                                  )
-                                                : theme.textTheme.bodyText1!
-                                                    .copyWith(
-                                                    color:
-                                                        AppColors.mainTextColor,
-                                                  ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return Spacers.verticalSpacer(height: 12);
-                            },
-                          ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return Spacers.verticalSpacer(height: 12);
+                          },
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24.w),
-                          child: ListView.separated(
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: _badHabits.length,
-                            itemBuilder: (context, index) {
-                              bool selectedBadHabit = index == badHabitsIndex;
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    badHabitsIndex = index;
-                                  });
-                                },
-                                child: Container(
-                                  width: 312.w,
-                                  height: 72.h,
-                                  decoration: selectedBadHabit
-                                      ? BoxDecoration(
-                                          border: Border.all(
-                                            color: AppColors.primaryColor,
-                                          ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24.w),
+                        child: ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _badHabits.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {});
+                              },
+                              child: Container(
+                                width: 312.w,
+                                height: 72.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  color: Colors.white,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        offset: Offset(0, 14),
+                                        blurRadius: 40.0,
+                                        color: AppColors.listItemShadowColor)
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 56.w,
+                                        height: 56.h,
+                                        decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(16.r),
                                           color: AppColors.listItemIconColor,
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                offset: Offset(0, 8),
-                                                blurRadius: 10.0,
-                                                color:
-                                                    AppColors.listItemIconColor)
-                                          ],
-                                        )
-                                      : BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16.r),
-                                          color: Colors.white,
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                offset: Offset(0, 8),
-                                                blurRadius: 10.0,
-                                                color:
-                                                    AppColors.listItemIconColor)
-                                          ],
                                         ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 56.w,
-                                          height: 56.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(16.r),
-                                            color: AppColors.listItemIconColor,
+                                        child:
+                                            Image.asset(_badHabitsIcons[index]),
+                                      ),
+                                      Spacers.horizontalSpacer(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          _badHabits[index],
+                                          style: theme.textTheme.bodyText1!
+                                              .copyWith(
+                                            color: AppColors.mainTextColor,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        Spacers.horizontalSpacer(width: 12),
-                                        Expanded(
-                                          child: Text(
-                                            _badHabits[index],
-                                            style: selectedBadHabit
-                                                ? theme.textTheme.bodyText1!
-                                                    .copyWith(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    fontWeight: FontWeight.w600,
-                                                  )
-                                                : theme.textTheme.bodyText1!
-                                                    .copyWith(
-                                                    color:
-                                                        AppColors.mainTextColor,
-                                                  ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return Spacers.verticalSpacer(height: 12);
-                            },
-                          ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return Spacers.verticalSpacer(height: 12);
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                Spacers.verticalSpacer(height: 24),
+
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Container(
-                    height: 56.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(16.r),
-                      ),
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          AppColors.primaryColor,
-                          AppColors.secondGradientColor,
-                        ],
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                          offset: Offset(0, 8),
-                          blurRadius: 10.0,
-                          color: AppColors.buttonShadowColor,
-                        )
-                      ],
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Next',
-                        style: theme.textTheme.bodyText1!.copyWith(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: AppColors.buttonShadowColor,
-                        primary: Colors.transparent,
-                        elevation: 20.0,
-                        tapTargetSize: MaterialTapTargetSize.padded,
-                      ),
-                    ),
+                  child: AppButton(
+                    text: "Next",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SleepOnboarding()),
+                      );
+                    },
                   ),
                 ),
-                Spacers.verticalSpacer(height: 15),
+                Spacers.verticalSpacer(height: 22),
               ],
             ),
           );
